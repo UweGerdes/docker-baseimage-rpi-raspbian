@@ -19,7 +19,7 @@ If you want to build it with other settings load the Dockerfile in an empty dire
 
 You might want to use tagged version of the `resin/rpi-raspbian` image with `BASEIMAGE_VERSION`. You should add the same version to tag the build. Default is `latest`.
 
-If you have an apt-cacher-ng proxy server replace `[APT_PROXY]` with your proxy cache hostname or ip. Otherwise omit that line.
+If you have an apt-cacher-ng proxy server replace `[APT-PROXY-SERVER]` with your proxy cache hostname or ip. Otherwise omit that line.
 
 There is also a timezone parameter `TZ`. The terminal type is sent to the build context too so coloured output might be possible.
 
@@ -30,7 +30,7 @@ Build the image with (you might change/omit the build-args, mind the dot in the 
 ```bash
 $ docker build -t uwegerdes/baseimage-rpi-raspbian:latest \
 	--build-arg BASEIMAGE_VERSION="latest" \
-	--build-arg APT_PROXY="http://[APT_PROXY]:3142" \
+	--build-arg APT_PROXY="http://[APT-PROXY-SERVER]:3142" --network=host \
 	--build-arg TZ="Europe/Berlin" \
 	--build-arg TERM="${TERM}" \
 	.
