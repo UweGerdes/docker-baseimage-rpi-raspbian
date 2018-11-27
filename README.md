@@ -1,8 +1,8 @@
-# Docker uwegerdes/baseimage-rpi-stretch
+# Docker uwegerdes/baseimage-rpi-raspbian
 
 A common base image for my Dockerfiles on Raspberry Pi 3 with Raspbian for my docker projects.
 
-The base for this image is resin/rpi-raspbian:stretch but it might change in the future. For others architectures (arm64v8, arm32v6 and arm32v5) there are images too - replace it in the `Dockerfile` before build. Check `uname -m` for a hint - the standard Raspbian for Pi 3 is 32 bit.
+The base for this image is `resin/rpi-raspbian` (armv7l) but it might change in the future. For others architectures (arm64v8, arm32v6 and arm32v5) there are images too - replace it in the `Dockerfile` before build. Check `uname -m` for a hint - the standard Raspbian for Pi 3 is 32 bit.
 
 ## Installing Docker
 
@@ -13,19 +13,24 @@ curl -sSL https://get.docker.com | sh
 sudo adduser pi docker
 ```
 
-## Building with settings
+## Building with arguments
 
 If you want to build it with other settings load the Dockerfile in an empty directory, perhaps edit it to your needs.
 
-If you have an apt-cacher-ng proxy server (try [uwegerdes/apt-cacher-ng](https://github.com/UweGerdes/docker-apt-cacher-ng)) you should check `hostname -i` or change it to an address available in your local network (not localhost) or omit the APT_PROXY line in the command above.
+You might want to use tagged version of the `resin/rpi-raspbian` image with `BASEIMAGE_VERSION`. You should add the same version to tag the build. Default is `latest`.
 
-There is also a timezone parameter TZ. The terminal type is sent to the build context too so coloured output might be possible.
+If you have an apt-cacher-ng proxy server replace `[APT_PROXY]` with your proxy cache hostname or ip. Otherwise omit that line.
+
+There is also a timezone parameter `TZ`. The terminal type is sent to the build context too so coloured output might be possible.
+
+The argument `TERM` helps scripts inside the container to find out information about the environment.
 
 Build the image with (you might change/omit the build-args, mind the dot in the last line):
 
 ```bash
-$ docker build -t uwegerdes/baseimage-rpi-stretch \
-	--build-arg APT_PROXY="http://192.168.1.18:3142" \
+$ docker build -t uwegerdes/baseimage-rpi-raspbian:stretch \
+	--build-arg BASEIMAGE_VERSION="stretch" \
+	--build-arg APT_PROXY="http://[APT_PROXY]:3142" \
 	--build-arg TZ="Europe/Berlin" \
 	--build-arg TERM="${TERM}" \
 	.
@@ -33,13 +38,23 @@ $ docker build -t uwegerdes/baseimage-rpi-stretch \
 
 ## Usage
 
-Use this baseimage in other `Dockerfile`s, they should work with this version or my [default baseimage](https://github.com/UweGerdes/docker-baseimage-rpi-stretch):
+Use this baseimage in other `Dockerfile`s:
 
 ```
-FROM uwegerdes/baseimage-rpi-stretch
+FROM uwegerdes/baseimage-rpi-raspbian
 ```
 
-## Settings
+Or start a container with:
 
-The build-args are saved and used by all images depending on this image.
+```bash
+$ docker run -it \
+	--name baseimage-rpi-raspbian \
+	uwegerdes/baseimage-rpi-raspbian \
+	bash
+```
 
+Restart it with:
+
+```bash
+$ docker start -ai baseimage-rpi-raspbian
+```
