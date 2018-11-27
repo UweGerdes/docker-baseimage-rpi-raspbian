@@ -28,8 +28,8 @@ The argument `TERM` helps scripts inside the container to find out information a
 Build the image with (you might change/omit the build-args, mind the dot in the last line):
 
 ```bash
-$ docker build -t uwegerdes/baseimage-rpi-raspbian:stretch \
-	--build-arg BASEIMAGE_VERSION="stretch" \
+$ docker build -t uwegerdes/baseimage-rpi-raspbian:latest \
+	--build-arg BASEIMAGE_VERSION="latest" \
 	--build-arg APT_PROXY="http://[APT_PROXY]:3142" \
 	--build-arg TZ="Europe/Berlin" \
 	--build-arg TERM="${TERM}" \
